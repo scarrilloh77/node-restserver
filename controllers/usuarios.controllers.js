@@ -1,5 +1,7 @@
 const { response, request } = require("express");
+const bcryptjs = require("bcryptjs");
 const Usuario = require("../models/usuario");
+const { validationResult } = require("express-validator");
 
 const usuariosGet = (req = request, res = response) => {
   // const query = req.query;
@@ -16,9 +18,29 @@ const usuariosGet = (req = request, res = response) => {
 };
 
 const usuariosPost = async (req, res = response) => {
-  const body = req.body;
-  const usuario = new Usuario(body);
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json(errors);
+  }
+
+  const { nombre, correo, password, role } = req.body;
+  const usuario = new Usuario({ nombre, correo, password, role });
+
+  // Verificar si el correo existe
+  const existeEmail = await Usuario.findOne({ correo: correo });
+  if (existeEmail) {
+    return res.status(400).json({
+      msg: "Ese correo ya está registrado",
+    });
+  }
+
+  // Encriptar la contraseña
+  const salt = bcryptjs.genSaltSync(10);
+  usuario.password = bcryptjs.hashSync(password, salt);
+
+  // Guardar en BD
   await usuario.save();
+
   res.json({
     msg: "post API - controlador",
     usuario,
