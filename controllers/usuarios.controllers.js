@@ -35,10 +35,9 @@ const usuariosPost = async (req, res = response) => {
 
 const usuariosPut = async (req, res = response) => {
   const { id } = req.params;
-  const { password, google, correo, ...resto } = req.body;
+  const { _id, password, google, correo, ...resto } = req.body;
 
   if (password) {
-    // Encriptar la contraseña
     const salt = bcryptjs.genSaltSync(10);
     resto.password = bcryptjs.hashSync(password, salt);
   }

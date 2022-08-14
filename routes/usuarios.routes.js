@@ -7,7 +7,11 @@ const {
   usuariosPatch,
   usuariosDelete,
 } = require("../controllers/usuarios.controllers");
-const { esRoleValido, emailExiste } = require("../helpers/db-validators");
+const {
+  esRoleValido,
+  emailExiste,
+  existeUsuarioPorId,
+} = require("../helpers/db-validators");
 const { validarCampos } = require("../middlewares/validar-campos");
 
 const router = Router();
@@ -22,14 +26,21 @@ router.post(
     }),
     check("correo", "El correo no es válido").isEmail(), //check es un middleware!
     check("correo").custom(emailExiste),
-    // check("role", "No es un rol válido").isIn(["ADMIN_ROLE", "USER_ROLE"]),
-    // check("role").custom((role) => esRoleValido(role)),
     check("role").custom(esRoleValido),
     validarCampos,
   ],
   usuariosPost
 );
-router.put("/:id", usuariosPut);
+router.put(
+  "/:id",
+  [
+    check("id", "No es un ID válido").isMongoId(),
+    check("id").custom(existeUsuarioPorId),
+    check("role").custom(esRoleValido),
+    validarCampos,
+  ],
+  usuariosPut
+);
 router.patch("/", usuariosPatch);
 router.delete("/", usuariosDelete);
 
