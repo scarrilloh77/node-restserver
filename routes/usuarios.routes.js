@@ -7,7 +7,7 @@ const {
   usuariosPatch,
   usuariosDelete,
 } = require("../controllers/usuarios.controllers");
-const { esRoleValido } = require("../helpers/db-validators");
+const { esRoleValido, emailExiste } = require("../helpers/db-validators");
 const { validarCampos } = require("../middlewares/validar-campos");
 
 const router = Router();
@@ -21,6 +21,7 @@ router.post(
       min: 6,
     }),
     check("correo", "El correo no es válido").isEmail(), //check es un middleware!
+    check("correo").custom(emailExiste),
     // check("role", "No es un rol válido").isIn(["ADMIN_ROLE", "USER_ROLE"]),
     // check("role").custom((role) => esRoleValido(role)),
     check("role").custom(esRoleValido),
