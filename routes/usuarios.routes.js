@@ -7,8 +7,8 @@ const {
   usuariosPatch,
   usuariosDelete,
 } = require("../controllers/usuarios.controllers");
+const { esRoleValido } = require("../helpers/db-validators");
 const { validarCampos } = require("../middlewares/validar-campos");
-const Role = require("../models/role");
 
 const router = Router();
 
@@ -22,12 +22,8 @@ router.post(
     }),
     check("correo", "El correo no es válido").isEmail(), //check es un middleware!
     // check("role", "No es un rol válido").isIn(["ADMIN_ROLE", "USER_ROLE"]),
-    check("role").custom(async (role = "") => {
-      const existeRole = await Role.findOne({ role: role });
-      if (!existeRole) {
-        throw new Error(`El rol ${role} no está registrado en la BD`);
-      }
-    }),
+    // check("role").custom((role) => esRoleValido(role)),
+    check("role").custom(esRoleValido),
     validarCampos,
   ],
   usuariosPost
