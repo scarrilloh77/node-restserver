@@ -56,10 +56,14 @@ const usuariosPatch = (req, res = response) => {
   });
 };
 
-const usuariosDelete = (req, res = response) => {
-  res.json({
-    msg: "delete API - controlador",
-  });
+const usuariosDelete = async (req, res = response) => {
+  const { id } = req.params;
+
+  // Fisicamente lo borramos
+  // const usuario = await Usuario.findByIdAndDelete(id); // No es recomendable!
+
+  const usuario = await Usuario.findByIdAndUpdate(id, { estado: false });
+  res.json(usuario);
 };
 
 module.exports = {
