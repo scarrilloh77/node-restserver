@@ -34,7 +34,8 @@ const UsuarioSchema = Schema({
 
 //La siguiente ebe ser una función normal, ya que el this va a ser referencia a la instancia creada!
 UsuarioSchema.methods.toJSON = function () {
-  const { __v, password, ...usuario } = this.toObject();
+  const { __v, password, _id, ...usuario } = this.toObject();
+  usuario.uid = _id;
   return usuario;
 };
 
