@@ -1,6 +1,6 @@
-const express = require("express");
-var cors = require("cors");
-const { dbConnection } = require("../database/config");
+const express = require('express');
+var cors = require('cors');
+const { dbConnection } = require('../database/config');
 
 class Server {
   constructor() {
@@ -8,9 +8,11 @@ class Server {
     this.port = process.env.PORT;
 
     this.paths = {
-      auth: "/api/auth",
-      categorias: "/api/categorias",
-      usuarios: "/api/usuarios",
+      auth: '/api/auth',
+      buscar: '/api/buscar',
+      categorias: '/api/categorias',
+      productos: '/api/productos',
+      usuarios: '/api/usuarios',
     };
 
     this.conectarDB();
@@ -25,18 +27,20 @@ class Server {
   middlewares() {
     this.app.use(cors());
     this.app.use(express.json());
-    this.app.use(express.static("public"));
+    this.app.use(express.static('public'));
   }
 
   routes() {
-    this.app.use(this.paths.auth, require("../routes/auth.routes"));
-    this.app.use(this.paths.categorias, require("../routes/categorias.routes"));
-    this.app.use(this.paths.usuarios, require("../routes/usuarios.routes"));
+    this.app.use(this.paths.auth, require('../routes/auth.routes'));
+    this.app.use(this.paths.buscar, require('../routes/buscar.routes'));
+    this.app.use(this.paths.categorias, require('../routes/categorias.routes'));
+    this.app.use(this.paths.productos, require('../routes/productos.routes'));
+    this.app.use(this.paths.usuarios, require('../routes/usuarios.routes'));
   }
 
   listen() {
     this.app.listen(this.port, () => {
-      console.log("Servidor corriendo en puerto", this.port);
+      console.log('Servidor corriendo en puerto', this.port);
     });
   }
 }
