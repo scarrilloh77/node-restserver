@@ -25,6 +25,9 @@ const ProductoSchema = Schema({
     ref: 'Categoria',
     required: true,
   },
+  img: {
+    type: String,
+  },
 });
 
 ProductoSchema.methods.toJSON = function () {
