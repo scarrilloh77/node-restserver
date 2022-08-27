@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 const {
   cargarArchivo,
-  actualizarImagen,
+  actualizarImagenCloudinary,
   mostrarImagen,
 } = require('../controllers/uploads.controller');
 const { coleccionesPermitidas } = require('../helpers');
@@ -22,7 +22,7 @@ router.put(
     ),
     validarCampos,
   ],
-  actualizarImagen
+  actualizarImagenCloudinary
 );
 
 router.get(
